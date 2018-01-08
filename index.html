@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>title</title>
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
+        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+    <!--Pulling Awesome Font -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./style/style.css">
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyC0fouEf5mBLBA4HRLyK29aofZxCoHXoMk",
+            authDomain: "crooked-whip-vote-tracker.firebaseapp.com",
+            databaseURL: "https://crooked-whip-vote-tracker.firebaseio.com",
+            projectId: "crooked-whip-vote-tracker",
+            storageBucket: "crooked-whip-vote-tracker.appspot.com",
+            messagingSenderId: "78470315134"
+        };
+        firebase.initializeApp(config);
+        firebase.auth().signOut();
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                $('#signin').hide();
+                loadDataBase();
+            } else {
+                $('#signin').show();
+            }
+        });
+        function signIn(email, password) {
+            firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+            });
+        }
+        function loadDataBase() {
+            var database = firebase.database();
+            //console.log(database)
+            database.ref().on("value", function (snapshot) {
+                var arrObj = snapshot.val().senators;
+                console.log(arrObj)
+                var myvar = '<table>' +
+                    '<tr>' +
+                    '<th>Senator</th>' +
+                    '<th>State</th>' +
+                    '<th>Phone</th>' +
+                    '</tr>';
+
+                for (var i = 0; i < arrObj.length; i++) {
+
+                    var voteForm = $('<form>');
+                    var yesInput = $('<input senatorid="' + i + '" type="radio" id="voteChoice1" name="vote" value="yes">');
+                    var yesLabel = $('<label for="voteChoice1">Yes</label>');
+                    var noInput = $('<input senatorid="' + i + '" type="radio" id="voteChoice2" name="vote" value="no">');
+                    var noLabel = $('<label for="contactChoice2">No / Undecided</label></div>');
+                    if (arrObj[i].Vote === 'yes') {
+                        $(yesInput).attr("checked", "checked");
+                    } else {
+                        $(noInput).attr("checked", "checked");
+                    }
+                    $(voteForm).append(yesInput);
+                    $(voteForm).append(yesLabel);
+                    $(voteForm).append(noInput);
+                    $(voteForm).append(noLabel);
+
+
+                    myvar += '<tr>' +
+                        '<td>' + arrObj[i].Senator + '</td>' +
+                        '<td>' + arrObj[i].State + '</td>' +
+                        '<td>' + arrObj[i]["Phone Number"] + '</td>' +
+                        '<td>' + $(voteForm).prop('outerHTML') + '</td>' +
+                        '</tr>'
+                }
+
+                myvar += '</table>';
+
+                document.getElementById('senators').innerHTML = myvar;
+                $('input').on('click', function (e) {
+
+                    var id = parseInt($(this).attr('senatorid'));
+                    arrObj[id].Vote = $(this).val();
+                    database.ref().set({
+                        senators: arrObj
+                    });
+                })
+
+            }, function (errorObject) {
+                console.log("The read failed: " + errorObject.code);
+            });
+        }
+        $(document).ready(function () {
+            $('#signin').hide();
+            $('#submit').on('click', function () {
+                console.log('click')
+                var email = $('#email').val();
+                var password = $('#password').val();
+                console.log(password)
+                signIn(email, password);
+            })
+        });
+    </script>
+</head>
+
+<body>
+    <div id="signin">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-offset-5 col-md-3">
+                    <div class="form-login">
+                        <h4>Welcome back.</h4>
+                        <input type="text" id="email" class="form-control input-sm chat-input" placeholder="email" />
+                        </br>
+                        <input type="text" id="password" class="form-control input-sm chat-input" placeholder="password" />
+                        </br>
+                        <div class="wrapper">
+                            <span class="group-btn">
+                                <a id="submit" href="#" class="btn btn-primary btn-md">login
+                                    <i class="fa fa-sign-in"></i>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="senators">
+
+    </div>
+</body>
+
+</html>
