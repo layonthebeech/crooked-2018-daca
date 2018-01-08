@@ -14,6 +14,7 @@
 
     <link rel="stylesheet" type="text/css" href="./style/style.css">
     <script>
+        $(document).ready(function () {
         // Initialize Firebase
         var config = {
             apiKey: "AIzaSyC0fouEf5mBLBA4HRLyK29aofZxCoHXoMk",
@@ -94,7 +95,7 @@
                 console.log("The read failed: " + errorObject.code);
             });
         }
-        $(document).ready(function () {
+        
             $('#signin').hide();
             $('#submit').on('click', function () {
                 console.log('click')
