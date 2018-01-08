@@ -38,6 +38,8 @@
             firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
                 var errorCode = error.code;
                 var errorMessage = error.message;
+                var error = $('<div id="error"> Incorrect email or password</div>')
+                $('.form-login').append(error)
             });
         }
         function loadDataBase() {
@@ -83,7 +85,7 @@
 
                 document.getElementById('senators').innerHTML = myvar;
                 $('input').on('click', function (e) {
-
+                    if($('#error').length) {$('#error').remove();}
                     var id = parseInt($(this).attr('senatorid'));
                     arrObj[id].Vote = $(this).val();
                     database.ref().set({
@@ -117,7 +119,7 @@
                         <h4>Welcome back.</h4>
                         <input type="text" id="email" class="form-control input-sm chat-input" placeholder="email" />
                         </br>
-                        <input type="text" id="password" class="form-control input-sm chat-input" placeholder="password" />
+                        <input type="password" id="password" class="form-control input-sm chat-input" placeholder="password" />
                         </br>
                         <div class="wrapper">
                             <span class="group-btn">
