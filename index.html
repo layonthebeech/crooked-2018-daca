@@ -58,19 +58,25 @@
                 for (var i = 0; i < arrObj.length; i++) {
 
                     var voteForm = $('<form>');
-                    var yesInput = $('<input senatorid="' + i + '" type="radio" id="voteChoice1" name="vote" value="yes">');
+                    var yesInput = $('<input senatorid="' + i + '" type="radio" id="voteChoice1" name="vote" value="Yes">');
                     var yesLabel = $('<label for="voteChoice1">Yes</label>');
-                    var noInput = $('<input senatorid="' + i + '" type="radio" id="voteChoice2" name="vote" value="no">');
-                    var noLabel = $('<label for="contactChoice2">No / Undecided</label></div>');
-                    if (arrObj[i].Vote === 'yes') {
+                    var noInput = $('<input senatorid="' + i + '" type="radio" id="voteChoice2" name="vote" value="No">');
+                    var noLabel = $('<label for="voteChoice2">No / Undecided</label></div>');
+                    var NAInput = $('<input senatorid="' + i + '" type="radio" id="voteChoice3" name="vote" value="NA">');
+                    var NALabel = $('<label for="voteChoice3">NA</label></div>');
+                    if (arrObj[i].Vote === 'Yes') {
                         $(yesInput).attr("checked", "checked");
-                    } else {
+                    } else if(arrObj[i].Vote === 'No') {
                         $(noInput).attr("checked", "checked");
+                    } else {
+                        $(NAInput).attr("checked","checked")
                     }
                     $(voteForm).append(yesInput);
                     $(voteForm).append(yesLabel);
                     $(voteForm).append(noInput);
                     $(voteForm).append(noLabel);
+                    $(voteForm).append(NAInput);
+                    $(voteForm).append(NALabel);
 
 
                     myvar += '<tr>' +
