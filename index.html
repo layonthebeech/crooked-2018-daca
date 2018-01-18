@@ -108,7 +108,6 @@
                     if($('#error').length) {$('#error').remove();}
                     var id = parseInt($(this).attr('senatorid'));
                     arrObj[id].Statement = $('#statement'+id).val();
-                    debugger;
                     database.ref().set({
                         senators: arrObj
                     });
