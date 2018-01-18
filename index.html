@@ -105,6 +105,7 @@
                     });
                 })
                 $('button').on('click', function (e) {
+                    e.preventDefault();
                     if($('#error').length) {$('#error').remove();}
                     var id = parseInt($(this).attr('senatorid'));
                     arrObj[id].Statement = $('#statement'+id).val();
